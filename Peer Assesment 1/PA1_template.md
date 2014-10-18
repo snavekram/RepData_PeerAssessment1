@@ -1,5 +1,5 @@
 # Reproducible Research: Peer Assessment 1
-Mark Evans
+Mark Evans  
 ## Load up required libraries
 Enironment is R version 3.1.1 with GGPlot for graphics. Load up the required libraries.
 
@@ -211,4 +211,5 @@ plot +
 ```
 
 ![plot of chunk weekday_difference2](./PA1_template_files/figure-html/weekday_difference2.png) 
+
 
