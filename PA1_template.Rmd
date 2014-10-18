@@ -1,10 +1,14 @@
-# Reproducible Research: Peer Assessment 1
-Mark Evans  
+---
+title: "Reproducible Research: Peer Assessment 1"
+author: Mark Evans
+output: 
+  html_document:
+    keep_md: true
+---
 ## Load up required libraries
 Environment is R version 3.1.1 with GGPlot for graphics. Load up the required libraries.
 
-
-```r
+```{r Libraries}
 library(ggplot2)
 ```
 
@@ -18,8 +22,7 @@ library(ggplot2)
 
 Load up the activity data set and then remove any na readings as these are to be ignored. The cleaned data set will be used for analysis.
 
-
-```r
+```{r LoadData}
 activity.raw <- read.csv("activity.csv")
 activity.clean <- na.omit(activity.raw)
 ```
@@ -34,8 +37,8 @@ activity.clean <- na.omit(activity.raw)
 
 Generate a histogram of the number of steps taken and then determine the mean and median of the number of steps taken. In all cases na values are ignored.
 
+```{r Q1MeanSteps}
 
-```r
 plot <- ggplot(activity.clean, aes(x=steps))
 plot +
         geom_histogram(fill = "darkred", colour = "darkred") +
@@ -43,21 +46,13 @@ plot +
         ylab("Frequency Count") +
         ggtitle("Number of Steps Taken") +
         theme_bw()
-```
 
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-```
-
-![plot of chunk Q1MeanSteps](./PA1_template_files/figure-html/Q1MeanSteps.png) 
-
-```r
 activity.mean <- mean(activity.clean$steps)
 activity.median <- median(activity.clean$steps)
 ```
-Mean number of steps is: **37.3826**
+Mean number of steps is: **`r activity.mean`**
 
-Median number of steps is: **0**
+Median number of steps is: **`r activity.median`**
 
 
 ## What is the average daily activity pattern?
@@ -69,8 +64,7 @@ Generate the average number of steps for each of the 5 minute periods and store 
 
 Then determine which row of the dataframe has the maximum number of steps and output the corresponding interval for this.
 
-
-```r
+```{r Q2AverageDaily}
 meansteps <- tapply(activity.clean$steps, activity.clean$interval, mean, simplify=TRUE)
 
 plot.data <- data.frame(interval=as.numeric(row.names(meansteps)), meansteps=as.numeric(meansteps))
@@ -82,15 +76,11 @@ plot +
         ylab("Mean Number of Steps") +
         ggtitle("Average number of steps taken, averaged across all days") +
         theme_bw()
-```
 
-![plot of chunk Q2AverageDaily](./PA1_template_files/figure-html/Q2AverageDaily.png) 
-
-```r
 maxmeansteps <- which.max(plot.data$meansteps)
 ```
 
-Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps? **835**
+Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps? **`r plot.data[maxmeansteps,1]`**
 
 
 ## Imputing missing values
@@ -110,30 +100,30 @@ Which 5-minute interval, on average across all the days in the dataset, contains
 ### #1 Missing values
 The number of missing values is the length difference between the raw and clean dataframes.
 
-
-```r
+```{r Q3.1NAcount}
 NAcount <- length(activity.raw[,1]) - length(activity.clean[,1])
 ```
 
-The number of NA rows is: **2304**
+The number of NA rows is: **`r NAcount`**
 
 
 ### #2 & #3 Populate missing values with a suitable value
 Selected strategy is to replace any step data that has NA with the average for that time interval.
 
+```{r Q3.2MissingValuesProcessing}
 
-```r
 na.mark <- is.na(activity.raw$steps)
 activity.manipulated <- activity.raw
 activity.manipulated$steps[na.mark] <- meansteps
+
 ```
 
 
 ### #4 Reprocess this new dataset
 Re-generate the histogram of the number of steps taken and then determine the mean and median of the number of steps taken. 
 
+```{r Q3.4MeanSteps}
 
-```r
 plot <- ggplot(activity.manipulated, aes(x=steps))
 plot +
         geom_histogram(fill = "darkred", colour = "darkred") +
@@ -141,21 +131,14 @@ plot +
         ylab("Frequency Count") +
         ggtitle("Number of Steps Taken") +
         theme_bw()
-```
 
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-```
 
-![plot of chunk Q3.4MeanSteps](./PA1_template_files/figure-html/Q3.4MeanSteps.png) 
-
-```r
 activity.mean <- mean(activity.manipulated$steps)
 activity.median <- median(activity.manipulated$steps)
 ```
-Mean number of steps is: **37.3826**
+Mean number of steps is: **`r activity.mean`**
 
-Median number of steps is: **0**
+Median number of steps is: **`r activity.median`**
 
 **Conclussion**: There is no difference between these values and those obtained by ignoring steps that have NA values. The reason is that the mean for interval was used as the substitution value.
 
@@ -171,20 +154,21 @@ Median number of steps is: **0**
 First generate a vector containing the days of the week for the dataset (note the manipulated dataset is being used).
 Modify this vector to identify weekdays and weekends by first replacing "Saturday" with "Weekend", then the same for "Sunday" and then replace anything that is not "Weekend" with "Weekday".
 
+```{r Q4.1WeekdayDifference}
 
-```r
 activity.manipulated.weekdays <- weekdays(as.Date(activity.manipulated$date))
 activity.manipulated.weekdays[activity.manipulated.weekdays=="Saturday"] <- "Weekend"
 activity.manipulated.weekdays[activity.manipulated.weekdays=="Sunday"] <- "Weekend"
 activity.manipulated.weekdays[activity.manipulated.weekdays!="Weekend"] <- "Weekday"
+
 ```
 
 Generate the mean number of steps for each interval as before but with separate means for weekdays and weekend days.
 
 My method is probably not the slickest and I think it could be possible to use a combination of split and sapply to achieve the same result.
 
+```{r Q4.2WeekdayDifference}
 
-```r
 meanStepsFactor <- function(data, factors, select) {
         # This function is specific for this analysis.
         # It takes a dataset and, for the selected day type, generates the mean number of steps for each interval 
@@ -208,8 +192,7 @@ plot +
         ggtitle("Average number of steps taken, averaged across all days") +
         facet_wrap(~DayType, ncol=1) +
         theme_bw()
-```
 
-![plot of chunk Q4.2WeekdayDifference](./PA1_template_files/figure-html/Q4.2WeekdayDifference.png) 
+```
 
 
