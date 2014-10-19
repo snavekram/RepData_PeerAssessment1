@@ -1,13 +1,20 @@
 # Reproducible Research: Peer Assessment 1
 Mark Evans  
-## Load up required libraries
-Environment is R version 3.1.1 with GGPlot for graphics. Load up the required libraries.
+>It is now possible to collect a large amount of data about personal movement using activity monitoring devices such as a Fitbit, Nike Fuelband, or Jawbone Up. These type of devices are part of the “quantified self” movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. But these data remain under-utilized both because the raw data are hard to obtain and there is a lack of statistical methods and software for processing and interpreting the data.
+>
+>
+>This assignment makes use of data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day.
+
+
+## Load up required libraries / set options
+Environment is R version 3.1.1 with GGPlot for graphics. Load up the required libraries and set the default output path for plots to "figures"
 
 
 ```r
 library(ggplot2)
+library(knitr)
+opts_chunk$set(fig.path = "figures/" )
 ```
-
 
 ## Loading and preprocessing the data
 >Show any code that is needed to
@@ -49,7 +56,7 @@ plot +
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
-![plot of chunk Q1MeanSteps](./PA1_template_files/figure-html/Q1MeanSteps.png) 
+![plot of chunk Q1MeanSteps](figures/Q1MeanSteps.png) 
 
 ```r
 activity.mean <- mean(activity.clean$steps)
@@ -84,7 +91,7 @@ plot +
         theme_bw()
 ```
 
-![plot of chunk Q2AverageDaily](./PA1_template_files/figure-html/Q2AverageDaily.png) 
+![plot of chunk Q2AverageDaily](figures/Q2AverageDaily.png) 
 
 ```r
 maxmeansteps <- which.max(plot.data$meansteps)
@@ -147,7 +154,7 @@ plot +
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
-![plot of chunk Q3.4MeanSteps](./PA1_template_files/figure-html/Q3.4MeanSteps.png) 
+![plot of chunk Q3.4MeanSteps](figures/Q3.4MeanSteps.png) 
 
 ```r
 activity.mean <- mean(activity.manipulated$steps)
@@ -210,6 +217,6 @@ plot +
         theme_bw()
 ```
 
-![plot of chunk Q4.2WeekdayDifference](./PA1_template_files/figure-html/Q4.2WeekdayDifference.png) 
+![plot of chunk Q4.2WeekdayDifference](figures/Q4.2WeekdayDifference.png) 
 
 
